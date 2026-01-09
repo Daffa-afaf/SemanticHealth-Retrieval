@@ -1,0 +1,6 @@
+{
+  "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+  "n_docs": 360513,
+  "embedding_dim": 384,
+  "corpus_size": 360513
+}

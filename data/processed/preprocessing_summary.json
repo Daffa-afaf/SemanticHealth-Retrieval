@@ -1,0 +1,15 @@
+{
+  "original_rows": 497974,
+  "after_deduplication": 360522,
+  "removed_duplicates": 137452,
+  "final_rows": 360513,
+  "multi_answer_questions": 1291,
+  "avg_question_length_original": 397.0353413053066,
+  "avg_question_length_processed": 266.236795899177,
+  "avg_answer_length_original": 1511.206264406554,
+  "avg_answer_length_processed": 937.6531747814919,
+  "stopwords_count": 126,
+  "sample_1pct_rows": 3686,
+  "sample_5pct_rows": 18108,
+  "sample_10pct_rows": 36152
+}

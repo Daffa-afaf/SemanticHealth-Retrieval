@@ -1,0 +1,51 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large data files
+data/raw/*.csv
+data/processed/*.csv
+
+# Model artifacts (large files)
+artifacts/semantic/model/
+artifacts/semantic/embeddings.npy
+artifacts/semantic/corpus_meta.pkl
+artifacts/tfidf/*.pkl
+artifacts/tfidf/*.npy
+artifacts/bm25/*.pkl
+artifacts/bm25/corpus_meta.pkl
+
+# Logs
+*.log
+logs/
+
+# Streamlit
+.streamlit/secrets.toml
