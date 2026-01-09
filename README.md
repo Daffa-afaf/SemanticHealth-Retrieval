@@ -217,24 +217,6 @@ Aplikasi akan terbuka di `http://localhost:8501`
 
 ---
 
-## Hasil Evaluasi
-
-### Analisis Kelebihan & Kekurangan
-
-#### Semantic Search
-- **Kelebihan**: Memahami konteks semantik, baik untuk paraphrase
-- **Kekurangan**: Lebih lambat, membutuhkan GPU untuk inference cepat
-
-#### TF-IDF
-- **Kelebihan**: Cepat, ringan, mudah interpretasi
-- **Kekurangan**: Tidak memahami semantik, keyword-based
-
-#### BM25
-- **Kelebihan**: Balance antara speed dan accuracy
-- **Kekurangan**: Masih keyword-based, butuh tuning parameter
-- 
----
-
 ## Acknowledgments
 
 - Dataset Indo Online Health Consultation
@@ -243,9 +225,5 @@ Aplikasi akan terbuka di `http://localhost:8501`
 - Streamlit framework
 
 <div align="center">
-
-⭐ **Star this repo if you find it useful!** ⭐
-
-Made with ❤️ for Indonesian Healthcare Information Retrieval
 
 </div>
