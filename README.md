@@ -13,7 +13,7 @@
 
 ---
 
-## 📋 Deskripsi Project
+## Deskripsi Project
 
 **SemanticHealth Retrieval** adalah sistem pencarian dokumen kesehatan berbasis AI yang membandingkan tiga metode Information Retrieval:
 
@@ -23,7 +23,7 @@
 
 Project ini menggunakan dataset **Indo Online Health Consultation Multilabel** dengan **360,513 dokumen** pertanyaan-jawaban kesehatan dalam Bahasa Indonesia.
 
-### 🎯 Tujuan Utama
+### Tujuan Utama
 
 1. Mengimplementasikan dan membandingkan 3 metode IR pada domain kesehatan
 2. Menganalisis kelebihan dan kekurangan masing-masing metode
@@ -32,24 +32,24 @@ Project ini menggunakan dataset **Indo Online Health Consultation Multilabel** d
 
 ---
 
-## 🚀 Fitur Utama
+## Fitur Utama
 
-✨ **3 Model IR Terintegrasi**
+ **3 Model IR Terintegrasi**
 - TF-IDF dengan preprocessing Sastrawi
 - BM25 dengan tuning parameter optimal
 - Semantic Search menggunakan multilingual sentence transformers
 
-📊 **Mode Perbandingan Side-by-Side**
+ **Mode Perbandingan Side-by-Side**
 - Bandingkan hasil dari ketiga model secara langsung
 - Visualisasi score distribution
 - Analisis overlap dokumen
 
-🔍 **Pencarian Real-time**
+ **Pencarian Real-time**
 - Query dalam bahasa Indonesia natural
 - Top-K hasil dengan ranking score
 - Metadata lengkap (topic, year)
 
-📈 **Evaluasi Komprehensif**
+ **Evaluasi Komprehensif**
 - Precision@K, Recall@K
 - NDCG (Normalized Discounted Cumulative Gain)
 - MRR (Mean Reciprocal Rank)
@@ -57,7 +57,7 @@ Project ini menggunakan dataset **Indo Online Health Consultation Multilabel** d
 
 ---
 
-## 🏗️ Arsitektur System
+## Arsitektur System
 
 ```
 SemanticHealth-Retrieval/
@@ -84,7 +84,7 @@ SemanticHealth-Retrieval/
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 **Source**: Indo Online Health Consultation - Multilabel
 
@@ -111,7 +111,7 @@ Year: 2023
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Core Technologies
 - **Python 3.9+** - Programming language
@@ -131,7 +131,7 @@ Year: 2023
 
 ---
 
-## 🔧 Installation & Setup
+##  Installation & Setup
 
 ### 1. Clone Repository
 
@@ -178,7 +178,7 @@ Aplikasi akan terbuka di `http://localhost:8501`
 
 ---
 
-## 📖 Dokumentasi
+## Dokumentasi
 
 ### Preprocessing Pipeline
 
@@ -217,95 +217,30 @@ Aplikasi akan terbuka di `http://localhost:8501`
 
 ---
 
-## 📊 Hasil Evaluasi
+## Hasil Evaluasi
 
 ### Analisis Kelebihan & Kekurangan
 
-#### ✅ Semantic Search
+#### Semantic Search
 - **Kelebihan**: Memahami konteks semantik, baik untuk paraphrase
 - **Kekurangan**: Lebih lambat, membutuhkan GPU untuk inference cepat
 
-#### ✅ TF-IDF
+#### TF-IDF
 - **Kelebihan**: Cepat, ringan, mudah interpretasi
 - **Kekurangan**: Tidak memahami semantik, keyword-based
 
-#### ✅ BM25
+#### BM25
 - **Kelebihan**: Balance antara speed dan accuracy
 - **Kekurangan**: Masih keyword-based, butuh tuning parameter
-
+- 
 ---
 
-## 🚢 Deployment ke Streamlit Cloud
-
-### 1. Push ke GitHub
-
-```bash
-git init
-git add .
-git commit -m "Initial commit: SemanticHealth Retrieval System"
-git branch -M main
-git remote add origin https://github.com/Daffa-afaf/SemanticHealth-Retrieval.git
-git push -u origin main
-```
-
-### 2. Deploy di Streamlit Cloud
-
-1. Buka [share.streamlit.io](https://share.streamlit.io)
-2. Login dengan GitHub
-3. Click "New app"
-4. Pilih repository: `Daffa-afaf/SemanticHealth-Retrieval`
-5. Main file path: `app.py`
-6. Click "Deploy"
-
-**Note**: Karena artifacts cukup besar, pertimbangkan untuk:
-- Gunakan Git LFS untuk file besar
-- Atau generate artifacts on-the-fly saat deployment
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
----
-
-## 📝 License
-
-Distributed under the MIT License.
-
----
-
-## 👨‍💻 Author
-
-**Daffa Afaf**
-
-- GitHub: [@Daffa-afaf](https://github.com/Daffa-afaf)
-- Project Link: [SemanticHealth-Retrieval](https://github.com/Daffa-afaf/SemanticHealth-Retrieval)
-
----
-
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Dataset Indo Online Health Consultation
 - Sastrawi Indonesian NLP library
 - Sentence Transformers by UKPLab
 - Streamlit framework
-
----
-
-## 📚 References
-
-1. Robertson, S. E., & Zaragoza, H. (2009). The probabilistic relevance framework: BM25 and beyond.
-2. Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.
-3. Salton, G., & Buckley, C. (1988). Term-weighting approaches in automatic text retrieval.
-
----
 
 <div align="center">
 
