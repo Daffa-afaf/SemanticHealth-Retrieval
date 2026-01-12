@@ -178,6 +178,27 @@ atau custom domain jika setup.
 4. **Compress Data**
    Gunakan compressed format (parquet, feather) instead of CSV.
 
+5. **Memory-map Numpy Arrays**
+   Untuk file `*.npy` besar (mis. embeddings), gunakan memory-mapping agar tidak memuat seluruh array ke RAM saat startup:
+   ```python
+   embeddings = np.load('embeddings.npy', mmap_mode='r')
+   ```
+
+6. **Prewarm di Background**
+   Mulai load model berat di thread background setelah UI tampil agar cold-start tidak terasa lambat:
+   ```python
+   import threading
+   if not st.session_state.get('warmup_started'):
+       st.session_state['warmup_started'] = True
+       threading.Thread(target=load_model, daemon=True).start()
+   ```
+
+7. **Minimize Dependencies**
+   Kurangi paket di `requirements.txt` hanya yang diperlukan. Paket besar memperlama build & cold-start.
+
+8. **Pin Versi Paket**
+   Versi yang dipin lebih stabil dan mempercepat cache build di platform cloud.
+
 ---
 
 ## 🆘 Support

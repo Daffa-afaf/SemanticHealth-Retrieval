@@ -9,6 +9,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import json
 import pickle
 from pathlib import Path
+import threading
 
 import pandas as pd
 import streamlit as st
@@ -230,19 +231,45 @@ def load_semantic():
         # Load model
         model_path = SEMANTIC_DIR / "model"
         if model_path.exists():
-            model = SentenceTransformer(str(model_path))
+            # Force CPU for broader compatibility and faster init on servers
+            model = SentenceTransformer(str(model_path), device="cpu")
         else:
             # Fallback to default model - disable for now if PyTorch fails
-            model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+            model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2', device="cpu")
         
         # Load precomputed embeddings and metadata
-        embeddings = np.load(SEMANTIC_DIR / "embeddings.npy")
+        # Memory-map to avoid loading full array into RAM at startup
+        embeddings = np.load(SEMANTIC_DIR / "embeddings.npy", mmap_mode='r')
         df_meta = pd.read_pickle(SEMANTIC_DIR / "corpus_meta.pkl")
         
         return model, embeddings, df_meta
     except Exception as e:
         # Silently fail - Semantic Search will be disabled
         return None
+
+
+def is_semantic_available() -> bool:
+    """Check presence of semantic artifacts without loading heavy resources."""
+    if not SEMANTIC_DIR.exists():
+        return False
+    try:
+        required = [SEMANTIC_DIR / "embeddings.npy", SEMANTIC_DIR / "corpus_meta.pkl"]
+        return all(p.exists() for p in required)
+    except Exception:
+        return False
+
+
+def read_docs_count() -> int:
+    """Lightweight doc count by reading any available corpus_meta.pkl."""
+    candidates = [TFIDF_DIR / "corpus_meta.pkl", BM25_DIR / "corpus_meta.pkl", SEMANTIC_DIR / "corpus_meta.pkl"]
+    for p in candidates:
+        if p.exists():
+            try:
+                df = pd.read_pickle(p)
+                return int(df.shape[0])
+            except Exception:
+                continue
+    return 0
 
 
 def search_tfidf(query: str, vectorizer, tfidf_matrix, df_meta, top_k=10):
@@ -350,18 +377,19 @@ def main():
 
     tfidf_bundle = load_tfidf()
     bm25_bundle = load_bm25()
-    semantic_bundle = load_semantic()
+    # Lazy load semantic to avoid slow cold start
+    semantic_bundle = None
 
     tfidf_docs = tfidf_bundle[1].shape[0] if tfidf_bundle else 0
     bm25_docs = bm25_bundle[1].shape[0] if bm25_bundle else 0
-    semantic_docs = semantic_bundle[1].shape[0] if semantic_bundle else 0
+    semantic_available = is_semantic_available()
 
     models = []
     if tfidf_bundle:
         models.append("tfidf")
     if bm25_bundle:
         models.append("bm25")
-    if semantic_bundle:
+    if semantic_available:
         models.append("semantic")
 
     if not models:
@@ -369,7 +397,7 @@ def main():
         return
 
     # Ambil total dokumen (asumsi semua model punya jumlah sama)
-    total_docs = tfidf_docs or bm25_docs or semantic_docs
+    total_docs = tfidf_docs or bm25_docs or read_docs_count()
     
     st.markdown(
         f"""
@@ -442,7 +470,7 @@ def main():
         else:
             model_status.append("❌ BM25")
             
-        if semantic_bundle:
+        if semantic_available:
             model_status.append("✅ Semantic")
         else:
             model_status.append("❌ Semantic")
@@ -450,7 +478,7 @@ def main():
         for status in model_status:
             st.markdown(f"<div style='padding: 0.3rem 0; color: #e5e7eb;'>{status}</div>", unsafe_allow_html=True)
         
-        total_docs = tfidf_docs or bm25_docs or semantic_docs
+        total_docs = tfidf_docs or bm25_docs or read_docs_count()
         st.markdown(f"<div style='margin-top: 1rem; padding: 0.5rem; background: rgba(15,118,110,0.1); border-radius: 8px; text-align: center;'><strong style='color: #4ade80;'>{total_docs:,}</strong><br/><span style='font-size: 0.85rem; color: #94a3b8;'>Total Dokumen</span></div>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -464,7 +492,13 @@ def main():
                 bm25, df_meta, stopwords, cfg = bm25_bundle
                 results = search_bm25(query, bm25, df_meta, top_k)
             else:  # semantic
-                model, embeddings, df_meta = semantic_bundle
+                # Load semantic on demand
+                semantic_bundle = load_semantic()
+                if not semantic_bundle:
+                    st.warning("Semantic artifacts tidak tersedia atau gagal diload.")
+                    results = pd.DataFrame()
+                else:
+                    model, embeddings, df_meta = semantic_bundle
                 results = search_semantic(query, model, embeddings, df_meta, top_k)
 
             if results.empty:
@@ -483,9 +517,14 @@ def main():
                 bm25, df_meta_bm25, stopwords, cfg = bm25_bundle
                 results_dict["BM25"] = search_bm25(query, bm25, df_meta_bm25, top_k)
             
-            if semantic_bundle:
-                model, embeddings, df_meta_sem = semantic_bundle
-                results_dict["Semantic"] = search_semantic(query, model, embeddings, df_meta_sem, top_k)
+            if semantic_available:
+                # Ensure semantic is loaded when needed
+                semantic_bundle = semantic_bundle or load_semantic()
+                if semantic_bundle:
+                    model, embeddings, df_meta_sem = semantic_bundle
+                    results_dict["Semantic"] = search_semantic(query, model, embeddings, df_meta_sem, top_k)
+                else:
+                    st.info("Semantic belum siap atau gagal diload.")
             
             if not results_dict or all(r.empty for r in results_dict.values()):
                 st.info("Tidak ada hasil dari model manapun.")
@@ -539,6 +578,13 @@ def main():
                             render_results(results, model_name.lower(), overlap_ids)
 
     # Sidebar intentionally removed for full-screen layout
+    # Background warmup for semantic (non-blocking) to improve first query performance
+    try:
+        if semantic_available and not st.session_state.get("semantic_warmup_started"):
+            st.session_state["semantic_warmup_started"] = True
+            threading.Thread(target=load_semantic, daemon=True).start()
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":
