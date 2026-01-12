@@ -96,7 +96,7 @@ SemanticHealth-Retrieval/
 | **Bahasa** | Indonesia |
 | **Domain** | Kesehatan & Konsultasi Medis |
 | **Format** | CSV (title, question, answer, topic, year) |
-| **Periode** | 2016-2023 |
+| **Periode** | 2016-2021 |
 | **Topics** | 15+ kategori (penyakit, gejala, pengobatan, dll) |
 
 ### Sample Data
@@ -106,7 +106,7 @@ Title: Demam tinggi pada anak
 Question: Anak saya demam 39°C sejak kemarin, apa yang harus dilakukan?
 Answer: Untuk menangani demam tinggi pada anak, berikan kompres hangat...
 Topic: pediatri
-Year: 2023
+Year: 2021
 ```
 
 ---
